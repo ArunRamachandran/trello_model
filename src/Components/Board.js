@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Controller from './Controller';
-import Contents from './Contents';
+import Column from './Column';
 
 class Board extends Component {
 
@@ -22,22 +22,26 @@ class Board extends Component {
 	}
 
 	createDataFragment = (data) => {
-		let dataObj = {1: [], 2: [], 3: []}, content;
+		let dataObj = {1: [], 2: [], 3: []};
+		let tColMax = this.state.tColMax;
 
 		data.forEach((element, index) => {
-			dataObj[ Math.round(index/this.state.tColMax) ].push(element);
+			dataObj[ Math.round(index/tColMax) ].push(element);
 		});
 
-		Object.keys(dataObj).forEach((key, index) => {
-			
-		})
+		return dataObj;
 	}
 
 	render() {
+		let columns = this.createDataFragment(this.state.data);
 		return (
 		  <div>
-		  	<Controller onClick={this.addNewCard}/>
-		  	<Contents/>
+		  	<Controller onClickHanlder={this.addNewCard}/>
+		  	<div className="data-col-container">
+		  		<Column data={columns[1]} index={1}/>
+		  		<Column data={columns[2]} index={2}/>
+		  		<Column data={columns[3]} index={3}/>
+		  	</div>
 		  </div>
 		);
 	}

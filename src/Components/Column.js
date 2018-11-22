@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Contents = (props) => {
+const Column = (props) => {
 	
 	function createDataFragement(data) {
 		return (
@@ -9,10 +9,10 @@ const Contents = (props) => {
 	}
 
 	return (
-		<div>
+		<div className={`col-${props.index}`}>
 			{createDataFragement(props.data)}
 		</div>
 	)
 };
 
-export default Contents;
+export default Column;

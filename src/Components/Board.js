@@ -15,6 +15,11 @@ class Board extends Component {
 	}
 
 	componentWillMount() {
+		// window.onbeforeunload = function() {
+  //       this.onUnload();
+  //       return "";
+  //   	}.bind(this);
+  //   	refer : https://stackoverflow.com/questions/50026028/react-how-to-detect-page-refresh-f5
 		window.addEventListener(
       		"unload",
       		this.saveStateToLocalStorage(this.state.data)

@@ -3,9 +3,13 @@ import React from 'react';
 const Column = (props) => {
 	
 	function createDataFragement(data) {
-		return (
-			<h3>Functional element</h3>
-		);
+		let contents = data.map((element, index) => {
+			return (
+				<p>{element}</p>
+			);
+		});
+
+		return contents;
 	}
 
 	return (

@@ -8,44 +8,40 @@ class Board extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: localStorage.hasOwnProperty('userData') ? this.retrieveStateFromLocalStorage() : [],
+			data: [],
 			tMax: 15,
-			tColMax: 5
+			tColMax: 5,
+		}
+
+    	window.addEventListener( 'beforeunload' , () => {
+    		this.saveStateToLocalStorage(this.state.data)
+    	}); 
+
+	}
+
+	componentWillMount = async () => {
+		let localStorageData = await this.retrieveStateFromLocalStorage();
+		this.setState({
+			data: localStorageData
+		});
+	}
+
+	saveStateToLocalStorage = async (data) => {
+		await localStorage.setItem('userData', JSON.stringify(data));
+	}
+
+	retrieveStateFromLocalStorage = async () => {
+		try {
+			return await JSON.parse(localStorage.getItem('userData'));
+		} catch(error) {
+			console.error(error);
 		}
 	}
 
-	componentWillMount() {
-		// window.onbeforeunload = function() {
-  //       this.onUnload();
-  //       return "";
-  //   	}.bind(this);
-  //   	refer : https://stackoverflow.com/questions/50026028/react-how-to-detect-page-refresh-f5
-		window.addEventListener(
-      		"unload",
-      		this.saveStateToLocalStorage(this.state.data)
-    	);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener(
-	      "unload",
-	      this.saveStateToLocalStorage(this.state.data)
-	    );
-	    this.saveStateToLocalStorage(this.state.data);
-	}
-
-	saveStateToLocalStorage = (data) => {
-		localStorage.setItem('userData', JSON.stringify(data));
-	}
-
-	retrieveStateFromLocalStorage = () => {
-		return JSON.parse(localStorage.getItem('userData'));
-	}
-
 	addNewCard = () => {
-		let data = this.state.data.slice(0);
+		let data = JSON.parse(JSON.stringify(this.state.data));
 		if (data.length  < this.state.tMax) {
-			data.push('New content');
+			data.push('Content placeholder');
 			this.setState({
 				data: data
 			})
@@ -54,27 +50,39 @@ class Board extends Component {
 		}
 	}
 
-	createDataFragment = (data) => {
-		let dataObj = {1: [], 2: [], 3: []};
+	deleteCard = () => {
+		let data = JSON.parse(JSON.stringify(this.state.data));
+		data.pop();
+		this.setState({
+			data: data
+		})
+	}
 
-		data.forEach((element, index) => {
-			if (index < 5 ) dataObj[1].push(element);
-			else if (index >= 5 && index < 10) dataObj[2].push(element);
-			else dataObj[3].push(element);
-		});
+	updateUserInput = (event, index) => {
+		let value = event.target.innerText;
+		let data = JSON.parse(JSON.stringify(this.state.data));
+		data[ index ] = value;
+		this.setState({
+			data: data
+		})
+	}
 
-		return dataObj;
+	deleteSpecificCard = (index) => {
+		let data = JSON.parse(JSON.stringify(this.state.data));
+		data.splice(index, 1);
+		this.setState({
+			data: data
+		})
 	}
 
 	render() {
-		let columns = this.createDataFragment(this.state.data);
+		let columns = JSON.parse( JSON.stringify(this.state.data));
+
 		return (
 		  <div>
-		  	<Controller onClickHanlder={this.addNewCard}/>
+		  	<Controller onClickHanlder={this.addNewCard} onDeleteHandler={this.deleteCard}/>
 		  	<div className="data-col-container">
-		  		<Column data={columns[1]} index={1}/>
-		  		<Column data={columns[2]} index={2}/>
-		  		<Column data={columns[3]} index={3}/>
+		  		<Column data={columns} index={1} updateUserInput={this.updateUserInput} deleteSpecificCard={this.deleteSpecificCard}/>
 		  	</div>
 		  </div>
 		);

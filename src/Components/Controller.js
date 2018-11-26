@@ -4,8 +4,8 @@ import './controller.css'
 const Controller = (props) => {
 	return (
 		<div className="controller">
-			<div className="add-ele" onClick={props.onClickHanlder}>Add</div>
-			<div className="remove-ele">Delete</div>
+			<button className="add-ele" onClick={props.onClickHanlder}>Add</button>
+			<button className="remove-ele" onClick={props.onDeleteHandler}> Delete</button>
 		</div>
 	)
 };

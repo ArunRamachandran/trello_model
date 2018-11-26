@@ -1,11 +1,15 @@
 import React from 'react';
+import './columns.css';
 
 const Column = (props) => {
 	
 	function createDataFragement(data) {
 		let contents = data.map((element, index) => {
 			return (
-				<p>{element}</p>
+				<div className="column-element">
+					<p contenteditable="true" onBlur={ (event) => props.updateUserInput(event, index) }>{element}</p>
+					<b onClick={ () => props.deleteSpecificCard(index) }>delete</b>
+				</div>
 			);
 		});
 
@@ -13,7 +17,7 @@ const Column = (props) => {
 	}
 
 	return (
-		<div className={`col-${props.index}`}>
+		<div className="column">
 			{createDataFragement(props.data)}
 		</div>
 	)
